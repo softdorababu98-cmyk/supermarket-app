@@ -1,0 +1,15 @@
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/softdorababu98-cmyk/supermarket-app.git'
+            }
+        }
+        stage('Deploy to Tomcat with Ansible') {
+            steps {
+                sh 'ansible-playbook /root/ansible/playbooks/deploy_tomcat.yml -i /opt/ansible/inventory.ini'
+            }
+        }
+    }
+}
