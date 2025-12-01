@@ -3,8 +3,8 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/softdorababu98-cmyk/supermarket-app.git'
-            }
+                git branch: 'main', url: 'https://github.com/softdorababu98-cmyk/supermarket-app.git'  
+           }
         }
         stage('Deploy to Tomcat with Ansible') {
             steps {
