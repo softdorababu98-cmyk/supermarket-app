@@ -1,0 +1,22 @@
+- hosts: tomcat_servers
+  become: yes
+  tasks:
+    - name: Stop Tomcat
+      systemd:
+        name: tomcat
+        state: stopped
+
+    - name: Copy WAR file
+      copy:
+        src: /tmp/supermarket.war
+        dest: /opt/tomcat9/webapps/supermarket.war
+        owner: tomcat
+        group: tomcat
+        mode: '0644'
+
+    - name: Restart Tomcat
+      systemd:
+        name: tomcat
+        state: restarted
+        daemon_reload: yes
+
