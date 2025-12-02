@@ -1,22 +1,22 @@
+---
 - hosts: tomcat_servers
   become: yes
   tasks:
     - name: Stop Tomcat
-      systemd:
-        name: tomcat
-        state: stopped
-
-    - name: Copy WAR file
+      service: name=tomcat state=stopped
+      
+    - name: Copy ALL WAR files
       copy:
-        src: /tmp/supermarket.war
-        dest: /opt/tomcat9/webapps/supermarket.war
+        src: "{{ playbook_dir }}/wars/{{ item }}"
+        dest: /opt/tomcat9/webapps/{{ item | regex_replace('.war$', '') }}.war
         owner: tomcat
         group: tomcat
-        mode: '0644'
-
-    - name: Restart Tomcat
-      systemd:
-        name: tomcat
-        state: restarted
-        daemon_reload: yes
-
+        mode: 0644
+      with_items:
+        - supermarket.war
+        - TestServerKrishna.war
+        - sample.war
+        
+    - name: Start Tomcat
+      service: name=tomcat state=started enabled=yes
+i
