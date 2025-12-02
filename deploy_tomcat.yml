@@ -3,20 +3,37 @@
   become: yes
   tasks:
     - name: Stop Tomcat
-      service: name=tomcat state=stopped
-      
-    - name: Copy ALL WAR files
+      service:
+        name: tomcat
+        state: stopped
+        
+    - name: Copy supermarket.war
       copy:
-        src: "{{ playbook_dir }}/wars/{{ item }}"
-        dest: /opt/tomcat9/webapps/{{ item | regex_replace('.war$', '') }}.war
+        src: "{{ playbook_dir }}/wars/supermarket.war"
+        dest: /opt/tomcat9/webapps/supermarket.war
         owner: tomcat
         group: tomcat
-        mode: 0644
-      with_items:
-        - supermarket.war
-        - TestServerKrishna.war
-        - sample.war
+        mode: '0644'
+        
+    - name: Copy TestServerKrishna.war
+      copy:
+        src: "{{ playbook_dir }}/wars/TestServerKrishna.war"
+        dest: /opt/tomcat9/webapps/TestServerKrishna.war
+        owner: tomcat
+        group: tomcat
+        mode: '0644'
+        
+    - name: Copy sample.war
+      copy:
+        src: "{{ playbook_dir }}/wars/sample.war"
+        dest: /opt/tomcat9/webapps/sample.war
+        owner: tomcat
+        group: tomcat
+        mode: '0644'
         
     - name: Start Tomcat
-      service: name=tomcat state=started enabled=yes
-i
+      service:
+        name: tomcat
+        state: started
+        enabled: yes
+
