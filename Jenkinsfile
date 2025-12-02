@@ -1,15 +1,38 @@
 pipeline {
     agent any
+    
     stages {
-        stage('Checkout') {
+        stage('Build') {
             steps {
-                git branch: 'main', url: 'https://github.com/softdorababu98-cmyk/supermarket-app.git'  
-           }
+                sh 'mvn clean package -DskipTests'
+            }
         }
-        stage('Deploy to Tomcat with Ansible') {
+        
+        stage('Test') {
             steps {
-                sh 'ansible-playbook deploy_tomcat.yml -i inventory.ini'
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
+        }
+        
+        stage('Deploy to Tomcat') {
+            steps {
+                sh 'ansible-playbook deploy_tomcat.yml -i inventory.ini'  // ← FIXED: Added sh
             }
         }
     }
+    
+    post {
+        success {
+            echo '✅ Supermarket app deployed successfully!'
+        }
+        failure {
+            echo '❌ Pipeline failed!'
+        }
+    }
 }
+
