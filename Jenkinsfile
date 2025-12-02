@@ -8,7 +8,7 @@ pipeline {
         }
         stage('Deploy to Tomcat with Ansible') {
             steps {
-                sh 'ansible-playbook /root/supermarket-app/deploy_tomcat.yml -i /opt/ansible/inventory.ini'
+                sh 'ansible-playbook deploy_tomcat.yml -i inventory.ini'
             }
         }
     }
